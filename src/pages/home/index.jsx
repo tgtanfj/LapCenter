@@ -6,6 +6,7 @@ import { fakeData } from "./data";
 
 const HomePage = () => {
     const [search, setSearch] = useState('')
+    const [sort, setSort] = useState('')
     const [data, setData] = useState(fakeData)
 
     const handleSearchProduct = (val) => {
@@ -15,13 +16,34 @@ const HomePage = () => {
             setSearch(val)
             setData(fakeData)
         }
-        
     }
 
     const handleSubmitSearch = () => {
         setData(
-            fakeData.filter(item => item.productName.toLowerCase().includes(search.toLowerCase()))
+            fakeData.filter((item) => item.productName.toLowerCase().includes(search.toLowerCase()))
         )
+    }
+
+    const handleFilterBrand = (value) => {
+        setData(
+            fakeData.filter((item) => item.productBrand.toLowerCase().includes(value.toLowerCase()))
+        )
+    }
+
+    const handleSortFrice = (value) => {
+        setSort(value)
+        if(value === 'asc') {
+            setData(
+                fakeData.sort((a, b) => a.price - b.price)
+            )
+        } else if(value === 'desc'){
+            setData( 
+                fakeData.sort((a, b) => b.price - a.price)
+            )
+        } else {
+            setData(fakeData)
+        }
+        
     }
 
     return (
@@ -34,23 +56,29 @@ const HomePage = () => {
                         <input
                             onChange={(e) => handleSearchProduct(e.target.value)}
                             className="outline-none mr-1 rounded py-2 px-2 border-[1px] border-gray-400" placeholder="Nhập tên sản phẩm" type="text" name="" id="" />
-                        <div onClick={handleSubmitSearch} className="p-2 cursor-pointer text-[#fff] rounded h-10 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">Tìm kiếm</div>
+                        <div onClick={(e) => handleSubmitSearch(e.target.value)} className="p-2 cursor-pointer text-[#fff] rounded h-10 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600">Tìm kiếm</div>
                     </div>
                     <div className="flex mr-5">
                         <p className="mt-2 mr-1">Hãng</p>
-                        <select className="w[140px] cursor-pointer rounded py-2 px-2 border-[1px] border-gray-400 ">
-                            <option value="">Dell</option>
-                            <option value="">Acer</option>
-                            <option value="">Asus</option>
-                            <option value="">Macbook</option>
-                            <option value="">WallE-Simple</option>
+                        <select
+                            onChange={(e) => handleFilterBrand(e.target.value)}
+                            className="w[140px] cursor-pointer rounded py-2 px-2 border-[1px] border-gray-400 ">
+                            <option value="">Tất cả</option>
+                            <option value="dell">Dell</option>
+                            <option value="acer">Acer</option>
+                            <option value="asus">Asus</option>
+                            <option value="macbook">Macbook</option>
+                            <option value="walle-simple">WallE-Simple</option>
                         </select>
                     </div>
                     <div className="flex">
                         <p className="mt-2 mr-1">Giá</p>
-                        <select className="w[240px] cursor-pointer rounded py-2 px-2 border-[1px] border-gray-400">
-                            <option value="">Thấp đến cao</option>
-                            <option value="">Cao đến thấp</option>
+                        <select
+                            onChange={(e) => handleSortFrice(e.target.value)}
+                            className="w[240px] cursor-pointer rounded py-2 px-2 border-[1px] border-gray-400">
+                            <option value="">Tất cả</option>
+                            <option value="asc">Thấp đến cao</option>
+                            <option value="desc">Cao đến thấp</option>
                         </select>
                     </div>
                 </div>
