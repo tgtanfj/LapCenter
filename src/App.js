@@ -5,6 +5,7 @@ import Intro from './pages/intro'
 import Contact from './pages/contact'
 import ProductDetail from './pages/product-detail'
 import Login from './pages/login'
+import Register from './pages/register'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   )
