@@ -6,13 +6,18 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@tippyjs/react": "^4.2.6",
     "axios": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
+    "react-multi-carousel": "^2.8.2",
+    "react-paginate": "^8.1.4",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.7",
+    "react-toastify": "^9.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

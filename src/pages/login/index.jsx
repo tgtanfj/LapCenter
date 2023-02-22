@@ -24,13 +24,13 @@ const Login = () => {
         }
     }
 
-    const handleLogin = () => {
-        if (username === fakeAccount.userName && password === fakeAccount.password) {
-            navigate('/')
-        } else {
-            alert("Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra!")
-        }
-    }
+    // const handleLogin = () => {
+    //     if (username === fakeAccount.userName && password === fakeAccount.password) {
+    //         navigate('/')
+    //     } else {
+    //         alert("Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra!")
+    //     }
+    // }
 
     const handleSubmitLogin = () => {
         setLoading(true)
@@ -42,6 +42,8 @@ const Login = () => {
                 navigate('/')
                 setLoading(false)
                 localStorage.setItem('name', response.data.userName)
+                localStorage.setItem('userId', response.data.userId)
+                localStorage.setItem('isAdmin', response.data.isAdmin)
             })
             .catch(function (error) {
                 alert('Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra!')
@@ -51,18 +53,18 @@ const Login = () => {
 
     return (
         <div className="w-screen h-screen flex bg-gradient-to-r from-[#98c5e9] to-blue-500 items-center justify-center">
-            <div className="h-auto w-[500px] bg-emerald-100 bg-neutral-50">
+            <div className="rounded-md h-auto w-[500px] bg-white ">
                 <p className="text-center my-7 text-2xl font-bold text-blue-500">Login</p>
                 <div className="w-[200px] mx-[150px] border-b-2 border-transparent-200 bg-gradient-to-r from-blue-200 to-blue-500"></div>
                 <div className="p-8">
                     <p className="font-semibold mb-1">Username</p>
                     <input
                         onChange={(e) => handleChange(e.target.value, 'username')}
-                        value={username} className="w-full p-2 border-[1px] border-blue-500 bg-white outline-none" type="text" placeholder="Username"></input>
+                        value={username} className="rounded-md w-full p-2 border-[1px] border-blue-500 bg-white outline-none" type="text" placeholder="Username"></input>
                     <p className="font-semibold mb-1">Password</p>
                     <input
                         onChange={(e) => handleChange(e.target.value, 'password')}
-                        value={password} className="w-full p-2 border-[1px] border-blue-500 bg-white outline-none" type="password" placeholder="Password"></input>
+                        value={password} className="rounded-md w-full p-2 border-[1px] border-blue-500 bg-white outline-none" type="password" placeholder="Password"></input>
                 </div>
                 <div
                     onClick={handleSubmitLogin}

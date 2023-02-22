@@ -1,0 +1,29 @@
+.fage-not-found-content {
+
+}
+
+.fage-not-found-container {
+    position: relative;
+    display: flex;
+}
+
+.back-to-home-button {
+    position: fixed;
+    top: 74%;
+    right: 47%;
+    z-index: 1;
+    border-radius: 20px;
+    width: 130px;
+    height: 30px;
+    color: #fff;
+    background-color: #333;
+}
+
+.back-to-home-button:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.picture2 {
+
+}

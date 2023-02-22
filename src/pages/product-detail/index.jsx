@@ -2,16 +2,54 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import Navbar from '../../components/navbar'
 import ProductCard from "../../components/product-card";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MoonLoader from 'react-spinners/MoonLoader'
 import Loader from "../../components/loader";
+import BrandCard from "../../components/brand-card";
+import Carousel from 'react-multi-carousel';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-multi-carousel/lib/styles.css';
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
 
 const ProductDetail = () => {
+
     const { state } = useLocation()
     const [data, setData] = useState()
+    const [listDataBrand, setListDataBrand] = useState()
     const [loading, setLoading] = useState(false)
+    const [isDisableAddCart, setIsDisableAddCart] = useState(false)
     const [thumbnail, setThumbnail] = useState()
+    const navigate = useNavigate()
 
+    const responsive = {
+        superLargeDesktop: {
+            // the naming can be any, depends on you.
+            breakpoint: { max: 4000, min: 3000 },
+            items: 5
+        },
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 3
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 2
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1
+        }
+    };
 
     const fetchAPI = () => {
         setLoading(true)
@@ -33,18 +71,86 @@ const ProductDetail = () => {
             })
     }
 
+    const handleSeaching = () => {
+        setLoading(true)
+        axios
+            .get(`https://lapcenter-v1.onrender.com/api/product`, {
+                params: {
+                    productBrand: state.brand,
+                },
+            })
+            .then(function (response) {
+                setListDataBrand(response.data.products)
+                setLoading(false)
+            })
+            .catch(function (error) {
+                setLoading(false)
+            })
+    }
+
+    const handleAddProductToCart = () => {
+        setIsDisableAddCart(true)
+        axios
+            .post(`https://lapcenter-v1.onrender.com/api/cart/addProductToCart`, {
+                userId: localStorage.getItem('userId'),
+                productId: data?._id,
+                productName: data?.name,
+                productBrand: data?.brand,
+                image: thumbnail,
+                price: data?.price,
+            })
+            .then(function (response) {
+                console.log(response)
+                toastSuccess()
+                setIsDisableAddCart(false)
+            })
+            .catch(function (error) {
+                console.log(error)
+                toastFail()
+                setIsDisableAddCart(false)
+            })
+    }
+
+    const toastSuccess = () => {
+        toast.success('Thêm vào giỏ hàng thành công', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+    }
+
+    const toastFail = () => {
+        toast.error('thêm vào giỏ hàng thất bại', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+    }
+
     useEffect(() => {
         fetchAPI()
-    }, [])
+        handleSeaching()
+        window.scroll(0, 0)
+    }, [state.id])
 
     return (
         <div>
-            <div className="px-10 py-5">
+            <div >
                 <Navbar />
                 {loading ? (
-                    <Loader loading={loading}/>
+                    <Loader loading={loading} />
                 ) : (
-                    <div>
+                    <div className="px-10 ">
                         <h1 className="text-2xl font-semibold">{data?.name}</h1>
                         <div className="flex">
                             <div className="flex">
@@ -72,8 +178,8 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                             <div className="w-[33%] px-4">
-                                <p>Giá bán: <span>100000 VND</span></p>
-                                <div>
+                                <p>Giá bán: <span>{data?.price} VND</span></p>
+                                <div className="mt-2">
                                     <div className="bg-green-600 p-5">
                                         <p className="text-lg text-stale-100">Khuyến mãi - Quà tặng</p>
                                     </div>
@@ -82,12 +188,27 @@ const ProductDetail = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-center my-3">
-                                    <div className="w-[110px] p-2 bg-red-600 rounded-lg cursor-pointer hover:bg-red-700
+                                    <div
+                                        onClick={() => navigate("/buy", { state: { productInfo: data } })}
+                                        className="w-[110px] p-2 bg-red-600 rounded-lg cursor-pointer hover:bg-red-700
                             transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 ...
                             ">
                                         <p className="text-sm font-semibold text-slate-100 text-center">Mua ngay</p>
                                     </div>
                                 </div>
+                                {localStorage.getItem('name') && (
+                                    <div className="flex justify-center my-3">
+                                        <div
+                                            onClick={!isDisableAddCart && handleAddProductToCart}
+                                            className={`w-[150px] p-2 bg-[#1d9fe3] rounded-lg cursor-pointer hover:bg-red-700
+                                            transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 ...
+                                            ${isDisableAddCart ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                            >
+                                            <p className="text-sm font-semibold text-slate-100 text-center">Thêm vào giỏ hàng</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="flex justify-center">
                                     <span className="mt-[2px]">Gọi ngay</span>
                                     <span className="mx-2 text-lg text-red-600 font-semibold">010101001011</span>
@@ -150,12 +271,25 @@ const ProductDetail = () => {
                                 </tbody>
                             </table>
                         </div>
+                        <hr className="mt-5" />
+                        <p className="text-2xl font-semibold mt-3">Sản phẩm cùng thương hiệu</p>
+                        <div className="h-20">
+                            <Carousel responsive={responsive}>
+                                {listDataBrand?.length > 0
+                                    &&
+                                    listDataBrand.map((item, index) => (
+                                        <BrandCard item={item} key={index} />
+                                    ))}
+                            </Carousel>
+                        </div>
                     </div>
                 )
                 }
 
 
             </div>
+
+
         </div>
     )
 }
