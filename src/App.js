@@ -6,9 +6,13 @@ import Contact from './pages/contact'
 import ProductDetail from './pages/product-detail'
 import Login from './pages/login'
 import Register from './pages/register'
-
+import PageNotFound from './pages/page-not-found'
+import Buy from './pages/buy'
+import MyCart from './pages/my-cart'
 
 function App() {
+  const name = localStorage.getItem('name')
+
   return (
     <BrowserRouter>
       <Routes>
@@ -16,8 +20,16 @@ function App() {
         <Route path="/intro" element={<Intro />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/buy" element={<Buy />} />
+        {localStorage.getItem('name') && <Route path="/cart" element={<MyCart />} />}
+        <Route path="/*" element={<PageNotFound />} />
+        {!name &&
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </>
+        }
+
       </Routes>
     </BrowserRouter>
   )

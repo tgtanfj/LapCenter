@@ -22,6 +22,10 @@ const Navbar = () => {
                     className="ml-4 mt-2 font-medium text-white hover:text-gray-400">
                     Liên hệ
                 </Link>
+                {localStorage.getItem('name') ? <Link to='/cart'
+                    className="ml-4 mt-2 font-medium text-white hover:text-gray-400">
+                   Giỏ hàng
+                </Link> : null}
                 {localStorage.getItem('name') ? (
                     <Link to='/login'
                         onClick={() => localStorage.clear()}

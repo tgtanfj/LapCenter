@@ -6,12 +6,16 @@ import Slider from "../../components/slider";
 import { fakeData } from "./data";
 import axios from 'axios'
 import Loader from "../../components/loader";
+import ReactDOM from 'react-dom';
+import ReactPaginate from 'react-paginate';
+import './style.css'
 
 const HomePage = () => {
     const [search, setSearch] = useState('')
     const [sort, setSort] = useState('')
     const [data, setData] = useState([])
     const [brand, setBrand] = useState([])
+    const [totalPage, setTotalPage] = useState(0)
     const [loading, setLoading] = useState(false)
 
 
@@ -34,22 +38,6 @@ const HomePage = () => {
         handleSeaching('', '', '')
     }, [])
 
-    const fetchAPIAxios = () => {
-        setLoading(true)
-        axios.get('https://lapcenter-v1.onrender.com/api/product')
-            .then(function (response) {
-                setData(response.data.products)
-                setLoading(false)
-            })
-            .catch(function (error) {
-                setLoading(false)
-                console.log(error);
-            })
-            .finally(function () {
-                setLoading(false)
-            });
-    }
-
     const handleSeaching = (productName, productBrand, sortPrice) => {
         setLoading(true)
         axios
@@ -59,6 +47,40 @@ const HomePage = () => {
                     productBrand: productBrand,
                     orderByDirection: sortPrice,
                     orderByColumn: 'price',
+                    pageSize: 12,
+                    pageNumber: 1
+                },
+            })
+            .then(function (response) {
+                setData(response.data.products)
+                setLoading(false)
+                setTotalPage(response.data.totalPage)
+            })
+            .catch(function (error) {
+                setLoading(false)
+            })
+    }
+
+    const handleSearchProductName = () => {
+        handleSeaching(search, brand, sort)
+    }
+
+    const handleChangePage = (pageNumber) => {
+        console.log("PAGE: ", pageNumber);
+        handlePagination(search, brand, sort, pageNumber)
+    }
+
+    const handlePagination = (productName, productBrand, sortPrice, pageNumber) => {
+        setLoading(true)
+        axios
+            .get(`https://lapcenter-v1.onrender.com/api/product`, {
+                params: {
+                    productName: productName,
+                    productBrand: productBrand,
+                    orderByDirection: sortPrice,
+                    orderByColumn: 'price',
+                    pageSize: 4,
+                    pageNumber: pageNumber
                 },
             })
             .then(function (response) {
@@ -68,10 +90,6 @@ const HomePage = () => {
             .catch(function (error) {
                 setLoading(false)
             })
-    }
-
-    const handleSearchProductName = () => {
-        handleSeaching(search, brand, sort)
     }
 
     return (
@@ -122,14 +140,24 @@ const HomePage = () => {
                     :
                     (
                         <div>
-
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10 pb-20">
                                 {data?.map((item) => (
                                     <ProductCard item={item} />
                                 ))}
                             </div>
                         </div>
                     )}
+                <div className="pagination">
+                    <ReactPaginate
+                        previousLabel={"<"}
+                        nextLabel={">"}
+                        breakLabel={"..."}
+                        pageCount={totalPage}
+                        onPageChange={(e) => handleChangePage(e.selected + 1)}
+                        containerClassName={"pagination"}
+                        activeClassName={"active"}
+                    />
+                </div>
             </div>
         </div>
     )
