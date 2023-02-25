@@ -9,6 +9,7 @@ import Register from './pages/register'
 import PageNotFound from './pages/page-not-found'
 import Buy from './pages/buy'
 import MyCart from './pages/my-cart'
+import BuyHistorise from './pages/buy-histories'
 
 function App() {
   const name = localStorage.getItem('name')
@@ -22,6 +23,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/buy" element={<Buy />} />
         {localStorage.getItem('name') && <Route path="/cart" element={<MyCart />} />}
+        {localStorage.getItem('name') && <Route path="/buy-histories" element={<BuyHistorise />} />}
         <Route path="/*" element={<PageNotFound />} />
         {!name &&
           <>

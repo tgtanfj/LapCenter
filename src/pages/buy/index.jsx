@@ -84,22 +84,7 @@ const Buy = () => {
             });
     }
 
-    // const handleGetAllProductInHistory = (productId) => {
-    //     axios.post(`https://lapcenter-v1.onrender.com/api/history/${productId}`, {
-    //         userId: localStorage.getItem('userId'),
-    //         phone: phone,
-    //         address: address,
-    //         productName: productInfo?.name || productInfo?.productName,
-    //         productBrand: productInfo?.brand || productInfo?.productBrand,
-    //         quantity: quantity,
-    //     })
-    //         .then(function (response) {
-    //             console.log(response);
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
+    
 
     const handleBuyProduct = () => {
         axios.post('https://lapcenter-v1.onrender.com/api/order/addOrder', {

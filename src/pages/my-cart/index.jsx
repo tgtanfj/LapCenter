@@ -3,6 +3,8 @@ import Navbar from "../../components/navbar";
 import axios from 'axios'
 import Loader from "../../components/loader";
 import { useNavigate } from "react-router";
+import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
 
 const MyCart = () => {
 
@@ -47,7 +49,7 @@ const MyCart = () => {
     }, [])
 
     return (
-        <div>
+        <div className="cart-container">
             <Navbar />
             {loading ? <Loader /> :
                 <div className="px-20 py-5">
