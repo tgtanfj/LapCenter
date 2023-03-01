@@ -10,6 +10,7 @@ import PageNotFound from './pages/page-not-found'
 import Buy from './pages/buy'
 import MyCart from './pages/my-cart'
 import BuyHistorise from './pages/buy-histories'
+import Orders from './pages/orders'
 
 function App() {
   const name = localStorage.getItem('name')
@@ -24,6 +25,7 @@ function App() {
         <Route path="/buy" element={<Buy />} />
         {localStorage.getItem('name') && <Route path="/cart" element={<MyCart />} />}
         {localStorage.getItem('name') && <Route path="/buy-histories" element={<BuyHistorise />} />}
+        {localStorage.getItem('name') && localStorage.getItem('isAdmin') === 'true' && <Route path="/orders" element={<Orders />} />}
         <Route path="/*" element={<PageNotFound />} />
         {!name &&
           <>
